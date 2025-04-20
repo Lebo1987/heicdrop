@@ -1,55 +1,52 @@
 // server.js
-import express from 'express';
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
-import sharp from 'sharp';
-import cors from 'cors';
+import express from 'express'
+import multer from 'multer'
+import fs from 'fs'
+import path from 'path'
+import cors from 'cors'
+import { exec } from 'child_process'
 
-const app = express();
-const PORT = 4000;
+const app = express()
+const PORT = 4000
 
-app.use(cors());
-app.use(express.static('output'));
+app.use(cors())
+app.use(express.static('output'))
 
-// Setup multer for file uploads
 const storage = multer.diskStorage({
   destination: './uploads/',
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
+    cb(null, Date.now() + '-' + file.originalname)
   },
-});
-const upload = multer({ storage });
+})
+const upload = multer({ storage })
 
-// Ensure upload/output directories exist
-if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads');
-if (!fs.existsSync('./output')) fs.mkdirSync('./output');
+if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads')
+if (!fs.existsSync('./output')) fs.mkdirSync('./output')
 
-// POST route for converting HEIC to JPG
 app.post('/convert', upload.single('file'), async (req, res) => {
-  try {
-    const inputPath = req.file.path;
-    const outputFilename =
-      path.basename(req.file.originalname, path.extname(req.file.originalname)) + '.jpg';
-    const outputPath = path.join('output', outputFilename);
+  const inputPath = req.file.path
+  const outputFilename = path.basename(req.file.originalname, path.extname(req.file.originalname)) + '.jpg'
+  const outputPath = path.join('output', outputFilename)
 
-    await sharp(inputPath)
-      .jpeg({ quality: 90 })
-      .toFile(outputPath);
+  const command = `magick "${inputPath}" "${outputPath}"`
 
-    // Clean up upload
-    fs.unlinkSync(inputPath);
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error('❌ ImageMagick Error:', error)
+      return res.status(500).send('Conversion failed.')
+    }
 
-    res.download(outputPath, outputFilename, (err) => {
-      if (err) console.error(err);
-      fs.unlinkSync(outputPath); // Clean output after download
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Conversion failed');
-  }
-});
+    fs.unlinkSync(inputPath)
+
+    res.setHeader('Content-Disposition', `attachment; filename="${outputFilename}"`)
+    res.setHeader('Content-Type', 'image/jpeg')
+    const readStream = fs.createReadStream(outputPath)
+    readStream.pipe(res)
+    readStream.on('close', () => fs.unlinkSync(outputPath))
+  })
+})
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-});
+  console.log(`🚀 Server is running on http://localhost:${PORT}`)
+})
+
