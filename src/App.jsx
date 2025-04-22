@@ -155,7 +155,7 @@ function App() {
                     onClick={handleConvert}
                     className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold transition"
                   >
-                    Convert to JPG
+                    Convert HEIC to JPG
                   </button>
                 )}
               </>
