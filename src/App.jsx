@@ -34,7 +34,7 @@ function App() {
     formData.append('file', file)
 
     try {
-      const res = await fetch('https://heicdrop-backend-production.up.railway.app/convert', {
+      const res = await fetch('https://heicdrop-backend-production-02d8.up.railway.app/convert', {
         method: 'POST',
         body: formData,
       })
