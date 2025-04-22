@@ -7,6 +7,7 @@ function App() {
   const [fileName, setFileName] = useState(null)
   const [openFAQ, setOpenFAQ] = useState(null)
   const [emailSubmitted, setEmailSubmitted] = useState(false)
+  const [isConverting, setIsConverting] = useState(false)
 
   const handleDrop = (e) => {
     e.preventDefault()
@@ -27,21 +28,29 @@ function App() {
 
   const handleConvert = async () => {
     if (!file) return
+    setIsConverting(true)
+
     const formData = new FormData()
     formData.append('file', file)
 
-    const res = await fetch('https://heicdrop-backend-production.up.railway.app/convert', {
-      method: 'POST',
-      body: formData,
-    })
+    try {
+      const res = await fetch('https://heicdrop-backend-production.up.railway.app/convert', {
+        method: 'POST',
+        body: formData,
+      })
 
-    const blob = await res.blob()
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = fileName.replace(/\.heic$/i, '.jpg')
-    a.click()
-    window.URL.revokeObjectURL(url)
+      const blob = await res.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = fileName.replace(/\.heic$/i, '.jpg')
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      alert("Conversion failed.")
+    } finally {
+      setIsConverting(false)
+    }
   }
 
   const toggleFAQ = (index) => {
@@ -124,12 +133,31 @@ function App() {
                 <p className="mt-4 text-green-600 font-semibold">
                   ✅ File selected: <span className="underline">{fileName}</span>
                 </p>
-                <button
-                  onClick={handleConvert}
-                  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold transition"
-                >
-                  Convert to JPG
-                </button>
+
+                {isConverting ? (
+                  <div className="mt-4 text-blue-600 font-semibold flex items-center justify-center">
+                    <svg className="animate-spin h-5 w-5 mr-2 text-blue-600" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12" cy="12" r="10"
+                        stroke="currentColor" strokeWidth="4" fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+                    Converting...
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleConvert}
+                    className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold transition"
+                  >
+                    Convert to JPG
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -152,7 +180,6 @@ function App() {
                 <p className="text-sm text-gray-600">Your file is converted instantly and deleted after. Private & safe.</p>
               </div>
             </div>
-
             <p className="text-xs text-gray-400 mt-6">
               🔒 We never store your files. Everything is processed in real time.
             </p>
@@ -218,3 +245,4 @@ function App() {
 }
 
 export default App
+
