@@ -137,22 +137,23 @@ function App() {
                 {isConverting ? (
                   <div className="mt-4 text-blue-600 font-semibold flex items-center justify-center">
                     <svg className="animate-spin h-5 w-5 mr-2 text-blue-600" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12" cy="12" r="10"
-                        stroke="currentColor" strokeWidth="4" fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                      />
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                     </svg>
                     Converting...
                   </div>
                 ) : (
                   <button
-                    onClick={handleConvert}
+                    onClick={() => {
+                      handleConvert();
+                      if (window.gtag) {
+                        window.gtag("event", "heic_conversion", {
+                          event_category: "Conversion",
+                          event_label: fileName,
+                          value: 1,
+                        });
+                      }
+                    }}
                     className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold transition"
                   >
                     Convert HEIC to JPG
@@ -189,49 +190,14 @@ function App() {
                 Want to convert multiple files at once? <span className="text-blue-600 font-semibold">Coming soon...</span>
               </p>
               <form onSubmit={handleEmailSubmit} className="mt-4 flex flex-col sm:flex-row justify-center items-center gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="px-4 py-2 border rounded-md text-sm w-64"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
-                >
-                  Notify Me
-                </button>
+                <input type="email" placeholder="Enter your email" className="px-4 py-2 border rounded-md text-sm w-64" required />
+                <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">Notify Me</button>
               </form>
               {emailSubmitted && (
                 <p className="text-green-600 text-sm mt-2">
                   Thank you! We'll notify you when it's ready.
                 </p>
               )}
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-blue-50 py-12 px-4 border-t">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <div key={index} className="bg-white rounded-lg shadow p-4">
-                  <button
-                    onClick={() => toggleFAQ(index)}
-                    className="w-full flex justify-between items-center text-left font-medium text-gray-800 text-sm"
-                  >
-                    <span>{faq.question}</span>
-                    <ChevronDown
-                      className={`transition-transform duration-300 ${openFAQ === index ? 'rotate-180' : ''}`}
-                      size={18}
-                    />
-                  </button>
-                  {openFAQ === index && (
-                    <div className="mt-3 text-sm text-gray-600">{faq.answer}</div>
-                  )}
-                </div>
-              ))}
             </div>
           </div>
         </section>
@@ -245,4 +211,3 @@ function App() {
 }
 
 export default App
-
