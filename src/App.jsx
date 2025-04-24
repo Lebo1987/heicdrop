@@ -203,8 +203,13 @@ function App() {
         </section>
 
         <footer className="text-center text-sm text-gray-500 py-6 border-t">
-          © {new Date().getFullYear()} HeicDrop.com — All rights reserved.
-        </footer>
+  <p>© {new Date().getFullYear()} HeicDrop.com — All rights reserved.</p>
+  <p className="mt-2">
+    <a href="/blog/heic-to-jpg-online.html" className="text-blue-600 hover:underline mx-2">HEIC to JPG Online</a> |
+    <a href="/blog/convert-heic-to-jpg-free.html" className="text-blue-600 hover:underline mx-2">Convert HEIC Free</a>
+  </p>
+</footer>
+
       </div>
     </>
   )
