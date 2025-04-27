@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "copy-blog": "node copy-blog.js",
+    "deploy": "npm run build && npm run copy-blog"
   },
   "dependencies": {
     "lucide-react": "^0.487.0",
