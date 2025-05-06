@@ -46,14 +46,6 @@ function App() {
       a.download = fileName.replace(/\.heic$/i, '.jpg')
       a.click()
       window.URL.revokeObjectURL(url)
-
-      if (window.gtag) {
-        window.gtag("event", "heic_conversion", {
-          event_category: "Conversion",
-          event_label: fileName,
-          value: 1,
-        })
-      }
     } catch (err) {
       alert("Conversion failed.")
     } finally {
@@ -74,23 +66,28 @@ function App() {
   const faqs = [
     {
       question: 'What is a HEIC file?',
-      answer: 'HEIC (High Efficiency Image Container) is an image format used by Apple to reduce file sizes without sacrificing quality.',
+      answer:
+        'HEIC (High Efficiency Image Container) is an image format used by Apple to reduce file sizes without sacrificing quality.',
     },
     {
       question: 'Why convert HEIC to JPG?',
-      answer: 'JPG is the most widely supported image format across all devices, platforms, and browsers. Converting ensures compatibility.',
+      answer:
+        'JPG is the most widely supported image format across all devices, platforms, and browsers. Converting ensures compatibility.',
     },
     {
       question: 'Is the conversion secure?',
-      answer: 'Yes. Your file is processed instantly on our server and deleted automatically after download. We don’t store any files.',
+      answer:
+        'Yes. Your file is processed instantly on our server and deleted automatically after download. We don’t store any files.',
     },
     {
       question: 'Can I convert multiple files?',
-      answer: 'Currently, we support one file at a time. Want bulk conversion? Let us know!',
+      answer:
+        'Currently, we support one file at a time. Want bulk conversion? Let us know!',
     },
     {
       question: 'Learn more about HEIC and JPG formats',
-      answer: 'You can read more about HEIC at Apple\'s official page (https://support.apple.com/en-us/HT207022) and about JPEG at Wikipedia (https://en.wikipedia.org/wiki/JPEG).',
+      answer:
+        'You can read more about HEIC at Apple\'s official page (https://support.apple.com/en-us/HT207022) and about JPEG at Wikipedia (https://en.wikipedia.org/wiki/JPEG).',
     },
   ]
 
@@ -107,15 +104,16 @@ function App() {
       </Helmet>
 
       <div className="min-h-screen bg-white text-gray-800 font-sans">
-        <header className="text-center py-8 px-4 border-b">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-blue-700">HeicDrop</h1>
-          <nav className="mt-4">
-            <a href="/" className="mx-3 text-sm text-gray-700 hover:text-blue-700">Home</a>
-            <a href="/blog/heic-to-jpg-online.html" className="mx-3 text-sm text-gray-700 hover:text-blue-700">Blog</a>
+        <header className="bg-white border-b shadow-sm px-4 py-4 flex justify-between items-center">
+          <a href="/" className="text-xl font-bold text-blue-700">HeicDrop</a>
+          <nav className="space-x-6">
+            <a href="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</a>
+            <a href="/blog/heic-to-jpg-online.html" className="text-gray-600 hover:text-blue-600 font-medium">HEIC to JPG</a>
+            <a href="/blog/convert-heic-to-jpg-free.html" className="text-gray-600 hover:text-blue-600 font-medium">Convert Free</a>
           </nav>
         </header>
 
-        <main className="flex justify-center px-4 py-12">
+        <main className="flex justify-center px-4 pb-16">
           <div
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
@@ -137,6 +135,7 @@ function App() {
                 <p className="mt-4 text-green-600 font-semibold">
                   ✅ File selected: <span className="underline">{fileName}</span>
                 </p>
+
                 {isConverting ? (
                   <div className="mt-4 text-blue-600 font-semibold flex items-center justify-center">
                     <svg className="animate-spin h-5 w-5 mr-2 text-blue-600" viewBox="0 0 24 24">
@@ -147,7 +146,16 @@ function App() {
                   </div>
                 ) : (
                   <button
-                    onClick={handleConvert}
+                    onClick={() => {
+                      handleConvert();
+                      if (window.gtag) {
+                        window.gtag("event", "heic_conversion", {
+                          event_category: "Conversion",
+                          event_label: fileName,
+                          value: 1,
+                        });
+                      }
+                    }}
                     className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold transition"
                   >
                     Convert HEIC to JPG
@@ -175,7 +183,6 @@ function App() {
                 <p className="text-sm text-gray-600">Your file is converted instantly and deleted after. Private & safe.</p>
               </div>
             </div>
-
             <p className="text-xs text-gray-400 mt-6">
               🔒 We never store your files. Everything is processed in real time.
             </p>
@@ -197,31 +204,6 @@ function App() {
           </div>
         </section>
 
-        <section className="bg-blue-50 py-12 px-4 border-t">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <div key={index} className="bg-white rounded-lg shadow p-4">
-                  <button
-                    onClick={() => toggleFAQ(index)}
-                    className="w-full flex justify-between items-center text-left font-medium text-gray-800 text-sm"
-                  >
-                    <span>{faq.question}</span>
-                    <ChevronDown
-                      className={`transition-transform duration-300 ${openFAQ === index ? 'rotate-180' : ''}`}
-                      size={18}
-                    />
-                  </button>
-                  {openFAQ === index && (
-                    <div className="mt-3 text-sm text-gray-600">{faq.answer}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <footer className="text-center text-sm text-gray-500 py-6 border-t">
           <p>© {new Date().getFullYear()} HeicDrop.com — All rights reserved.</p>
           <p className="mt-2">
@@ -229,6 +211,7 @@ function App() {
             <a href="/blog/convert-heic-to-jpg-free.html" className="text-blue-600 hover:underline mx-2">Convert HEIC Free</a>
           </p>
         </footer>
+
       </div>
     </>
   )
