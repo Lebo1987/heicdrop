@@ -90,20 +90,24 @@ function App() {
       </Helmet>
 
       <div className="min-h-screen bg-white text-gray-800 font-sans">
-        <header className="flex justify-between items-center px-6 py-4 border-b shadow-sm">
-          <div className="text-2xl font-bold text-blue-600">HeicDrop</div>
-          <nav className="flex gap-4 text-sm font-medium">
-            <a href="/" className="text-gray-700 hover:text-blue-600">Home</a>
-            <a href="/" className="text-gray-700 hover:text-blue-600">HEIC to JPEG</a>
-            <div className="relative group">
-              <span className="text-gray-700 hover:text-blue-600 cursor-pointer">Blog ▾</span>
-              <div className="absolute hidden group-hover:block bg-white border mt-2 rounded shadow-md">
-                <a href="/blog/heic-to-jpg-online.html" className="block px-4 py-2 hover:bg-gray-100">HEIC to JPG Online</a>
-                <a href="/blog/convert-heic-to-jpg-free.html" className="block px-4 py-2 hover:bg-gray-100">Convert HEIC Free</a>
-              </div>
-            </div>
-          </nav>
-        </header>
+        <header className="py-6 border-b">
+  <div className="container mx-auto flex justify-center items-center px-4">
+    <div className="text-center w-full">
+      <a href="/" className="text-3xl font-extrabold text-blue-700">HeicDrop</a>
+    </div>
+    <div className="absolute right-4">
+      <nav className="space-x-4 text-sm font-medium text-gray-700">
+        <div className="inline-block relative group">
+          <button className="focus:outline-none">Blog ▾</button>
+          <div className="absolute right-0 mt-1 w-56 bg-white border rounded shadow-lg hidden group-hover:block z-50 text-left">
+            <a href="/blog/heic-to-jpg-online.html" className="block px-4 py-2 hover:bg-gray-100 text-sm">HEIC to JPG Online</a>
+            <a href="/blog/convert-heic-to-jpg-free.html" className="block px-4 py-2 hover:bg-gray-100 text-sm">Convert HEIC Free</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
 
         <main className="text-center py-12 px-4">
           <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700 mb-4">Convert HEIC to JPG</h1>
