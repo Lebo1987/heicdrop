@@ -20,6 +20,7 @@ fs.readdirSync(srcDir).forEach((file) => {
   const cleanName = normalizeFileName(file);
   const destFile = path.join(destDir, cleanName);
   fs.copyFileSync(srcFile, destFile);
-  console.log(`✅ Copied & renamed: ${file} -> ${cleanName}`);
+  console.log(`✅ Copied & renamed: ${file} → ${cleanName}`);
 });
+
 
