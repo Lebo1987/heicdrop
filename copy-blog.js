@@ -1,21 +1,25 @@
-const fs = require('fs');
-const path = require('path');
+// copy-blog.js
+const fs = require("fs");
+const path = require("path");
 
-const sourceDir = path.join(__dirname, 'public', 'blog');
-const targetDir = path.join(__dirname, 'dist', 'blog');
+const srcDir = path.join(__dirname, "public", "blog");
+const destDir = path.join(__dirname, "dist", "blog");
 
-// צור את dist/blog אם לא קיים
-if (!fs.existsSync(targetDir)) {
-  fs.mkdirSync(targetDir, { recursive: true });
+if (!fs.existsSync(destDir)) {
+  fs.mkdirSync(destDir, { recursive: true });
 }
 
-// העתק את כל קבצי HTML
-fs.readdirSync(sourceDir).forEach(file => {
-  if (file.endsWith('.html')) {
-    fs.copyFileSync(
-      path.join(sourceDir, file),
-      path.join(targetDir, file)
-    );
-    console.log(`✅ Copied: ${file}`);
-  }
+const normalizeFileName = (name) =>
+  name
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-\.]/g, "");
+
+fs.readdirSync(srcDir).forEach((file) => {
+  const srcFile = path.join(srcDir, file);
+  const cleanName = normalizeFileName(file);
+  const destFile = path.join(destDir, cleanName);
+  fs.copyFileSync(srcFile, destFile);
+  console.log(`✅ Copied & renamed: ${file} -> ${cleanName}`);
 });
+
