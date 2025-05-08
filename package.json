@@ -5,7 +5,8 @@
     "dev": "vite",
     "build": "vite build",
     "copy-blog": "node copy-blog.js",
-    "deploy": "npm run build && npm run copy-blog"
+    "generate-sitemap": "node generate-sitemap.js",
+    "deploy": "npm run build && npm run copy-blog && npm run generate-sitemap"
   },
   "dependencies": {
     "lucide-react": "^0.487.0",
@@ -21,4 +22,3 @@
     "vite": "^5.0.10"
   }
 }
-
